@@ -1,4 +1,4 @@
-'use client'
+"use client";
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import CreatePostDialog from "@/components/CreatePostDialog";
@@ -26,10 +26,19 @@ const NavBar = () => {
 
               {/* LogOut Button */}
               <LogOutButton />
-              <Avatar>
-                <AvatarImage src={user?.profileImage} alt="profile" />
-                <AvatarFallback> CN </AvatarFallback>
-              </Avatar>
+              <Link href={"/profile"}>
+                <Avatar>
+                  <AvatarImage src={user?.image} alt="profile" />
+                  <AvatarFallback className=" bg-white">
+                    {user?.name?.split(" ")[0]
+                      ? user?.name.split(" ")[0][0]
+                      : "P"}
+                    {user?.name?.split(" ")[1]
+                      ? user.name.split(" ")[1][0]
+                      : ""}
+                  </AvatarFallback>
+                </Avatar>
+              </Link>
             </>
           ) : (
             <>

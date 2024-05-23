@@ -1,13 +1,15 @@
 import { create } from "zustand";
-import { User, Post } from "@/types";
+import { TokenUser } from "@/types";
+import { Post } from "@prisma/client";
+import axios from "axios";
 
 export type useStoreStateTypes = {
   isLoggedIn: boolean,
-  user: User | null,
+  user: TokenUser | null,
   allPosts: Post[] | null,
-  setUser: (user: User) => void
+  setUser: (user: TokenUser | null) => void
   setIsLoggedIn: (value: boolean) => void,
-  setAllPosts: (value: Post[] | null) => void
+  setAllPosts: (value: Post[] | null) => void,
 }
 
 export const useStoreState = create<useStoreStateTypes>((set) => ({
@@ -15,6 +17,6 @@ export const useStoreState = create<useStoreStateTypes>((set) => ({
   allPosts: [],
   isLoggedIn: false,
   setAllPosts: (value: Post[] | null) => set(() => ({ allPosts: value })),
-  setUser: (user: User) => set(() => ({ user })),
-  setIsLoggedIn: (value: boolean) => set(() => ({ isLoggedIn: value}))
+  setUser: (user: TokenUser | null) => set(() => ({ user })),
+  setIsLoggedIn: (value: boolean) => set(() => ({ isLoggedIn: value})),
 }))

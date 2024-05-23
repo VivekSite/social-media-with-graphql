@@ -1,17 +1,10 @@
-export type User = {
-    id: string;
-    name: string;
-    email: string;
-    profileImage: string;
-  };
-  
-  export type Post = {
-      _id: string,
-      title: string,
-      message: string,
-      isDeleted: boolean,
-      tags: string,
-      imageUrl: string,
-      __v: number,
-      author: User,
-  }
+import { User, Post } from "@prisma/client";
+
+export type TokenUser = {
+  image: string | undefined;
+  name: string;
+  email: string;
+  id: string;
+  iat: number;
+  exp: number;
+};

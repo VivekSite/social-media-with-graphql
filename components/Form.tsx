@@ -3,7 +3,6 @@
 import { supabase } from "@/lib/supabaseClient";
 import { useRouter } from "next/navigation";
 import React, { useState } from "react";
-import { ADD_AUTHOR } from "@/app/api/graphql/mutation";
 import axios from "axios";
 
 import { Input } from "@/components/ui/input";
@@ -22,7 +21,6 @@ export const Form = ({ type }: { type: string }) => {
 
   const handleSignUp = async (e: React.FormEvent) => {
     e.preventDefault();
-
     // Validate name
     if (!formData.name || formData.name.length < 3) {
       toast({
@@ -62,6 +60,7 @@ export const Form = ({ type }: { type: string }) => {
         title: "Password is Required!",
         description: "Please enter a password",
       });
+
       return;
     } else {
       const isValidPassword =
@@ -91,7 +90,7 @@ export const Form = ({ type }: { type: string }) => {
 
     try {
       const response = await axios.post(
-        "http://localhost:8080/api/v1/user/register",
+        "http://localhost:3000/api/auth/register",
         {
           name: formData.name,
           email: formData.email,
@@ -99,18 +98,12 @@ export const Form = ({ type }: { type: string }) => {
         }
       );
 
-      // localStorage.setItem(
-      //   "profile",
-      //   JSON.stringify({
-      //     token: response.data.token,
-      //     user: {
-      //       id: response.data.user._id,
-      //       name: response.data.user.name,
-      //       email: response.data.user.email,
-      //       profileImage: response.data.user.profileImage,
-      //     },
-      //   })
-      // );
+      localStorage.setItem(
+        "token",
+        JSON.stringify({
+          token: response.data.token,
+        })
+      );
 
       console.log("Successfully registered: ", response.data);
       setFormData({
@@ -149,7 +142,7 @@ export const Form = ({ type }: { type: string }) => {
 
     try {
       const response = await axios.post(
-        "http://localhost:8080/api/v1/user/login",
+        "http://localhost:3000/api/auth/login",
         {
           email: formData.email,
           password: formData.password,
@@ -157,15 +150,9 @@ export const Form = ({ type }: { type: string }) => {
       );
 
       localStorage.setItem(
-        "profile",
+        "token",
         JSON.stringify({
           token: response.data.token,
-          user: {
-            id: response.data.user._id,
-            name: response.data.user.name,
-            email: response.data.user.email,
-            profileImage: response.data.user.profileImage,
-          },
         })
       );
       console.log("Response: ", response.data);
@@ -174,18 +161,6 @@ export const Form = ({ type }: { type: string }) => {
       console.log("Error while logging in: ", error.message);
     }
   };
-
-  const handleGoogleSignIn = async () => {
-    const { data, error } = await supabase.auth.signInWithOAuth({
-      provider: "google",
-    });
-
-    if(error) {
-      console.log("Error while signing in: ", error.message);
-    } else {
-      console.log("Successfully signed in");
-    }
-  }
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData({
@@ -231,9 +206,6 @@ export const Form = ({ type }: { type: string }) => {
           onChange={handleChange}
         />
       )}
-      <Button variant={"outline"} type="button" onClick={handleGoogleSignIn}>
-        Google SignIn
-      </Button>
       <Button type="submit">
         {type === "register" ? "Sign Up" : "Sign In"}
       </Button>

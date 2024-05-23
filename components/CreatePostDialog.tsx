@@ -57,10 +57,10 @@ const CreatePostDialog = () => {
       console.log(fullPath);
 
       try {
-        await axios.post("http://localhost:8080/api/v1/post/create", {
+        await axios.post("http://localhost:3000/api/post/create", {
           ...formData,
-          imageUrl: fullPath,
-          author: user?.id,
+          image: fullPath,
+          authorId: user?.id,
         });
 
         setFormData({

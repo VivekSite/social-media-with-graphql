@@ -6,12 +6,12 @@ import { useRouter } from "next/navigation";
 
 const LogOutButton = () => {
     const router = useRouter();
-    const { setIsLoggedIn } = useStoreState();
+    const { setIsLoggedIn, setUser } = useStoreState();
 
   const handleLogOut = () => {
-    localStorage.removeItem("profile");
-    localStorage.removeItem("sb-bupcfjiplkeuimqddutg-auth-token");
+    localStorage.removeItem("token");
     setIsLoggedIn(false);
+    setUser(null);
     router.push("/");
   };
 

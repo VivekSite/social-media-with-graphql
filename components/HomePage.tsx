@@ -1,19 +1,40 @@
-'use client'
+"use client";
 
 import { useEffect } from "react";
 import { useStoreState } from "@/store/store";
 import SinglePost from "./SinglePost";
 import axios from "axios";
-import { Post } from "@/types";
+import { Post } from "@prisma/client";
 
 const HomePage = () => {
-  const { setIsLoggedIn, setUser, allPosts, setAllPosts } = useStoreState();
+  const { setUser, setIsLoggedIn, allPosts, setAllPosts } = useStoreState();
+
+  const verifyToken = async (token: String) => {
+    if (!token) {
+      return;
+    }
+
+    try {
+      const response = await axios.post(
+        "http://localhost:3000/api/auth/verify",
+        { token }
+      );
+
+      setUser(response.data);
+      setIsLoggedIn(true);
+    } catch (error: any) {
+      if (error?.response?.data?.includes("Token is expired")) {
+        console.log("Token is expired. Please Login again");
+        localStorage.removeItem("token");
+      }
+      console.log(`Error while verifying token: ${error.message}`);
+    }
+  };
 
   const fetchAllPosts = async () => {
     try {
-      const response = await axios.get("http://localhost:8080/api/v1/post");
-
-      setAllPosts(response.data.data);
+      const response = await axios.get("http://localhost:3000/api/post");
+      setAllPosts(response?.data);
     } catch (error: any) {
       console.log(`Error fetching posts: ${error.message}`);
     }
@@ -21,24 +42,20 @@ const HomePage = () => {
 
   useEffect(() => {
     fetchAllPosts();
-    const profile = localStorage.getItem("profile");
-    const isGoogleLoggedIn = localStorage.getItem("sb-bupcfjiplkeuimqddutg-auth-token");
 
-    const data = JSON.parse(profile ? profile : "{}");
-    const googleSession = JSON.parse(isGoogleLoggedIn ? isGoogleLoggedIn : "{}");
+    // Verify the token
+    const Item = localStorage.getItem("token");
+    const { token } = JSON.parse(Item ? Item : "{}");
+    verifyToken(token);
 
-    if(profile || isGoogleLoggedIn){
-      setIsLoggedIn(true);
-      setUser(data?.user || googleSession?.user?.identities[0]?.identity_data);
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [setIsLoggedIn, setUser, allPosts]);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   return (
     <>
       <div className="flex flex-wrap justify-evenly">
         {allPosts?.map((post: Post) => (
-          <SinglePost key={post._id} postData={post} />
+          <SinglePost key={post.id} postData={post} />
         ))}
       </div>
     </>

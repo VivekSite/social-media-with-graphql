@@ -1,39 +1,34 @@
 export const typeDefs = `#graphql
-    type Novel {
+    type Post {
         id: ID!
-        name: String
         title: String
+        message: String
         image: String
+        author: User
+        authorId: String
+
         createdAt: String
         updatedAt: String
-        authors: [Author]
     }
 
-    type Author {
+    type User {
         id: ID!
         name: String
         email: String
         password: String
-        novelId: String
+
+        createdAt: String
+        updatedAt: String
+
+        posts: [Post]
     }
 
     type Query {
-        novels: [Novel]
-        novel(id: ID!): Novel
-    }
+        posts: [Post]
+        post(id: ID!): Post
 
-    type Mutation {
-        addNovel (image:String, title:String) : Novel
-        updateNovel(id:ID!, title:String, image:String) : Novel
-        deleteNovel(id:ID!) : Novel
-
-        addAuthor(
-            name: String, 
-            email: String, 
-            password: String
-            ): Author
-        deleteAuthor(id:ID!): Author
+        users: [User]
+        userById(id: ID!): User
+        userByEmail(email: String): User
     }
 `;
-
-
