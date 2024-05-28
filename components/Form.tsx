@@ -90,7 +90,7 @@ export const Form = ({ type }: { type: string }) => {
 
     try {
       const response = await axios.post(
-        "http://localhost:3000/api/auth/register",
+        `${process.env.NEXT_PUBLIC_ORIGIN}/api/auth/register`,
         {
           name: formData.name,
           email: formData.email,
@@ -142,7 +142,7 @@ export const Form = ({ type }: { type: string }) => {
 
     try {
       const response = await axios.post(
-        "http://localhost:3000/api/auth/login",
+        `${process.env.NEXT_PUBLIC_ORIGIN}/api/auth/login`,
         {
           email: formData.email,
           password: formData.password,

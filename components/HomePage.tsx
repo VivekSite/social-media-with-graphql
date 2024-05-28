@@ -16,7 +16,7 @@ const HomePage = () => {
 
     try {
       const response = await axios.post(
-        "http://localhost:3000/api/auth/verify",
+        `${process.env.NEXT_PUBLIC_ORIGIN}/api/auth/verify`,
         { token }
       );
 
@@ -33,7 +33,7 @@ const HomePage = () => {
 
   const fetchAllPosts = async () => {
     try {
-      const response = await axios.get("http://localhost:3000/api/post");
+      const response = await axios.get(`${process.env.NEXT_PUBLIC_ORIGIN}/api/post`);
       setAllPosts(response?.data);
     } catch (error: any) {
       console.log(`Error fetching posts: ${error.message}`);

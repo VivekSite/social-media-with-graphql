@@ -57,7 +57,7 @@ const CreatePostDialog = () => {
       console.log(fullPath);
 
       try {
-        await axios.post("http://localhost:3000/api/post/create", {
+        await axios.post(`${process.env.NEXT_PUBLIC_ORIGIN}/api/post/create`, {
           ...formData,
           image: fullPath,
           authorId: user?.id,
